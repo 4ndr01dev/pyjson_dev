@@ -1,1 +1,1 @@
-![alt text](Web 1920 – 1.jpg "Demo")
+![alt text](Web.jpg "Demo")
