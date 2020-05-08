@@ -1,3 +1,6 @@
+# *               @ANDROIDEV
+# *                 2020
+# * _____________________________________________________________
 import json  # librery
 import os
 # * _____________________________________________________________
@@ -40,12 +43,12 @@ def writeJson(currJson, data):
 # ? _______________________________________________________________________________
 
 # *------------------ ADD FIELD-------------------------------(Array of object)
-def addField(newField):  # ! en que fichero busco ?
+def addField(currJson, newField): 
 
     f = open(currJson)
     data = json.load(f)
     data[newField] = []
-    writeJson(data)
+    writeJson(currJson, data)
 
 # *------------------ FIND FIELD-------------------------------(Array of object)
 # ! just add a parameters for diferent values and return; deside how to operate
@@ -65,7 +68,7 @@ def findField(currJson, field):
     return False
 
 # *------------------ DELETE FIELD-------------------------------(Array of object)
-def delField(field):  # ! en que fichero busco ?
+def delField(currJson, field):  
 
 
     with open(currJson, 'r') as data_file:
@@ -78,7 +81,7 @@ def delField(field):  # ! en que fichero busco ?
             del data[element]
             break
 
-    writeJson(data)
+    writeJson(currJson, data)
 # ? _______________________________________________________________________________
 
 # *------------------ ADD ITEM-------------------------------(Object in an Array)
@@ -90,10 +93,10 @@ def addItem(currJson, dic, item):  # TODO modelo de datos definitivo
         data[dic].append(item)
         writeJson(currJson, data)
     else:
-        print('no existe la libreria, quiere crear una ?')
-        #! pedir crear una nueva libreria
+        print('no existe la libreria, debe crearla')
+        return False
 
-# *------------------ DELETE ITEM-------------------------------(Object in an Array)
+# *------------------ DELETE ITEM by value-------------------------------(Object in an Array)
 def delValueItem(currJson,itemDel):
 
     deleted= False
@@ -131,8 +134,32 @@ def delItem(currJson,itemDel):
 
     writeJson(currJson,data)
 
+# *------------------ FIND ITEM by value-------------------------------
+def findValueItem(currJson, item):  # ! just add a parameters for diferent values and return;
+    numItems = 0
+
+    with open(currJson, 'r') as data_file:
+        data = json.load(data_file)
+
+        for element in data:
+            for i in range(len(data[element])):
+                values = data[element][i]
+                for value in values.values():
+                    if value == item:
+                        numItems = numItems + 1
+                        print("Item was found, it's : ", value)
+                        
+                        
+
+        if numItems > 0:
+            print("Amount : ", numItems)
+            return True
+    print('no se encontro!')
+    return False
+
+
 # *------------------ FIND ITEM-------------------------------
-def findItem(currJson,item):  # ! just add a parameters for diferent values and return; deside how to operate 
+def findItem(currJson,item):  # ! just add a parameters for diferent values and return; 
     numItems = 0
 
     with open(currJson, 'r') as data_file:
@@ -147,8 +174,10 @@ def findItem(currJson,item):  # ! just add a parameters for diferent values and 
                     print("Amount : " , numItems)
                     return True
 
-        if numItems > 1:
-            print('eliminar redundancias')
+        if numItems > 0:
+            print("Amount : ", numItems)
+            return True
+    print('no se encontro!')
     return False
 
 
@@ -183,7 +212,7 @@ def findItem(currJson,item):  # ! just add a parameters for diferent values and 
 #addItem('words.json','dic',pepinillo)
 # addField('Hola')
 # delField('Hola')
-#delValueItem('words.json','pepinillo')#!funciona buscar la palabra pero no por la palabra que busco
+findValueItem('words.json','wena')#!funciona buscar la palabra pero no por la palabra que busco
 # findItem('item')
 # findField('Hola')
 # addNewJson('pico.json')
