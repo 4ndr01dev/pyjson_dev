@@ -40,6 +40,8 @@ def writeJson(currJson, data):
 
     with open(currJson, 'w') as jsonFileOut:
         json.dump(data, jsonFileOut, indent=4)
+
+
 # ? _______________________________________________________________________________
 
 # *------------------ ADD FIELD-------------------------------(Array of object)
@@ -62,7 +64,6 @@ def findField(currJson, field):
             if field == element:
                 numField = numField + 1
                 print("Field was found, it's : ", element)
-                print("Contains : ", data[element])
                 print("Amount : ", numField)
                 return True
     return False
@@ -85,17 +86,51 @@ def delField(currJson, field):
 # ? _______________________________________________________________________________
 
 # *------------------ ADD ITEM-------------------------------(Object in an Array)
-def addItem(currJson, dic, item):  # TODO modelo de datos definitivo
 
-    f = open(currJson)
-    data = json.load(f)
-    if findField(currJson, dic):
-        data[dic].append(item)
-        writeJson(currJson, data)
+
+# TODO modelo de datos definitivo
+def addItem(currJson, dic, item, nameObject: bool = None, name: str = 'DefaultName'):
+    if nameObject:
+        return addItemNamed(currJson, dic, item, nameObject, name)
     else:
-        print('no existe la libreria, debe crearla')
-        return False
+        print('add item')
+        f = open(currJson)
+        data = json.load(f)
+        if findField(currJson, dic):
+            data[dic].append(item)
+            writeJson(currJson, data)
+            return True
+        else:
+            print('no existe la libreria, debe crearla')
+            return False
 
+
+def addItemNamed(currJson, dic, item, nameObject: bool = None, name: str = 'DefaultName'):
+        print('add item named')
+        f = open(currJson)
+        data = json.load(f)
+        if findField(currJson, dic):
+            data[dic].append({
+                name:item
+            })
+            writeJson(currJson, data)
+            return True
+        else:
+            print('no existe la libreria, debe crearla')
+            return False
+# *------------------ DELETE ITEM-------------------------------(Object in an Array)
+
+
+def delItem(currJson, itemListDel: str = None, itemValueDel: str = None, itemDict: dict = None):
+
+    if itemDict:
+        print('del by dict')  # !<-----
+    if itemValueDel:
+        return delValueItem(currJson, itemValueDel)
+    if itemListDel:
+        return delListItem(currJson, itemListDel)
+
+    return False
 # *------------------ DELETE ITEM by value-------------------------------(Object in an Array)
 def delValueItem(currJson,itemDel):
 
@@ -110,32 +145,45 @@ def delValueItem(currJson,itemDel):
                         if value == itemDel:
                             del data[element][i]
                             print(value + ' Was deleted')
-                            deleted== True
-                    if deleted == True:
-                        break
+                            writeJson(currJson, data)
+                            return True
 
+    return False
 
-    writeJson(currJson,data)
-
-# *------------------ DELETE ITEM-------------------------------(Object in an Array)
-def delItem(currJson,itemDel):  
-
+# *------------------ DELETE ITEM by list name-------------------------------(Object in an Array)
+def delListItem(currJson, itemDel):
     with open(currJson, 'r') as data_file:
         data = json.load(data_file)
 
         for element in data:
             for i in range(len(data[element])):
-                print(data[element][i].value())
-                if itemDel in data[element][i]:#!arreglar esta wea
 
-                    print(data[element][i][itemDel]+' Was deleted')
+                if itemDel in data[element][i]:
+
+                    print(data[element][i][itemDel],' Was deleted')
                     del data[element][i]
-                    break
+                    writeJson(currJson,data)
+                    return True
 
-    writeJson(currJson,data)
+    return False
+
+
+
+
+# *------------------ FIND ITEM-------------------------------
+def findItem(currJson, itemList: str = None, itemValue: str = None, itemDict: dict = None):
+    if itemDict: 
+        return findDictItem(currJson, itemDict)
+    if itemValue:
+        return findValueItem(currJson, itemValue)
+    if itemList:
+        return findListItem(currJson, itemList)
+
+    return False
 
 # *------------------ FIND ITEM by value-------------------------------
-def findValueItem(currJson, item):  # ! just add a parameters for diferent values and return;
+def findValueItem(currJson, item): 
+    print('find list by value')
     numItems = 0
 
     with open(currJson, 'r') as data_file:
@@ -157,9 +205,8 @@ def findValueItem(currJson, item):  # ! just add a parameters for diferent value
     print('no se encontro!')
     return False
 
-
-# *------------------ FIND ITEM-------------------------------
-def findItem(currJson,item):  # ! just add a parameters for diferent values and return; 
+# *------------------ FIND ITEM by list name-------------------------------
+def findListItem(currJson, item):
     numItems = 0
 
     with open(currJson, 'r') as data_file:
@@ -170,9 +217,7 @@ def findItem(currJson,item):  # ! just add a parameters for diferent values and 
                 if item in data[element][i]:
                     numItems = numItems + 1
                     print("Item was found, it's : ", data[element][i])
-                    print("Contains : " + data[element][i][item])
                     print("Amount : " , numItems)
-                    return True
 
         if numItems > 0:
             print("Amount : ", numItems)
@@ -181,39 +226,19 @@ def findItem(currJson,item):  # ! just add a parameters for diferent values and 
     return False
 
 
+def findDictItem(currJson, item):
+    numItems = 0
+
+    with open(currJson, 'r') as data_file:
+        data = json.load(data_file)
+
+        for element in data:
+            for dics in data[element]:
+                if item == dics:
+                    numItems = numItems +1
+        if numItems >0:
+            print('amount: ',numItems)
+            return True
+    return False
 
 
-
-# * _____________________________________________________________
-        # *      MAIN # 
-# * _____________________________________________________________
-#  # ! ahora evaluar como hago una funcion para esta wea
-# amountJsonFiles = 0
-# path = os.getcwd()
-# for file in os.listdir(path):
-#     if file.endswith(".json"):
-#         print(os.path.join(file))
-#         amountJsonFiles=amountJsonFiles+1
-# if amountJsonFiles == 1:
-#     currJson = file
-#     print('currJson : ',currJson)
-# else:
-#     dir_list = os.listdir(path)
-#     if amountJsonFiles == 0:
-#         addNewJson('default.json')
-#         if 'default.json' in dir_list:
-#             currJson= 'default.json'
-#             print('currJson : ', currJson)
-#     if amountJsonFiles == 2 :
-#         if 'default.json' in dir_list:
-#             currJson= 'default.json'
-#             print('currJson : ', currJson)
-#         #! else: si no esta entonces preguntar al usuario cual quiere setear como el current
-#addItem('words.json','dic',pepinillo)
-# addField('Hola')
-# delField('Hola')
-findValueItem('words.json','wena')#!funciona buscar la palabra pero no por la palabra que busco
-# findItem('item')
-# findField('Hola')
-# addNewJson('pico.json')
-# delJson('pico.json')
