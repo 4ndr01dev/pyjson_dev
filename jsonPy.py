@@ -3,10 +3,16 @@
 # * _____________________________________________________________
 import json  # librery
 import os
+import string
+import random
 # * _____________________________________________________________
 # *                FUNCTIONS
 # * _____________________________________________________________
 
+
+def generateId(stringLength=8):
+    lettersAndDigits = string.ascii_letters + string.digits
+    return ''.join((random.choice(lettersAndDigits) for i in range(stringLength)))
 # *------------------ CREATE A NEW JSON-------------------------------
 
 def addNewJson(name): 
@@ -138,14 +144,23 @@ def delField(currJson, field):
 
 # *------------------ ADD ITEM-------------------------------(Object in an Array)
 
-def addItem(currJson, dic, item, nameObject: bool = None, name: str = 'DefaultName'):
+def addItem(currJson, dic, item: dict, nameObject: bool = None, name: str = 'DefaultName'):
+    idFound = False
     if '.json' in currJson:
         print('lets find it')  # TODO apli
     else:
         currJson = currJson+'.json'  # TODO apli
+    id = 'seF5YaNw'
+    while idFound == False:
+        if findItem(currJson,dic,itemValue= id) :
+            print('there is a value with that id')
+            id = generateId()
+        else: 
+            idFound = True
+    item['ID']= id 
     if findJson(currJson):
         if nameObject:
-            return addItemNamed(currJson, dic, item, nameObject, name)
+            return __addItemNamed(currJson, dic, item, nameObject, name)
         else:
             print('add item')
             f = open(currJson)
@@ -164,7 +179,7 @@ def addItem(currJson, dic, item, nameObject: bool = None, name: str = 'DefaultNa
 
 
 # *------------------ ADD ITEM with Name list-------------------------------(Object in an Array)
-def addItemNamed(currJson, dic, item: dict, nameObject: bool = None, name: str = 'DefaultName'):
+def __addItemNamed(currJson, dic, item: dict, nameObject: bool = None, name: str = 'DefaultName'):
     if '.json' in currJson: print('lets find it')  # TODO apli
     else:
         currJson = currJson+'.json'  # TODO apli
@@ -196,9 +211,9 @@ def delItem(currJson, itemListDel: str = None, itemValueDel: str = None, itemDic
         if itemDict:
             print('del by dict')  # !<-----
         if itemValueDel:
-            return delValueItem(currJson, itemValueDel)
+            return __delValueItem(currJson, itemValueDel)
         if itemListDel:
-            return delListItem(currJson, itemListDel)
+            return __delListItem(currJson, itemListDel)
 
         return False
     else:
@@ -207,7 +222,7 @@ def delItem(currJson, itemListDel: str = None, itemValueDel: str = None, itemDic
 
 
 # *------------------ DELETE ITEM by value-------------------------------(Object in an Array)
-def delValueItem(currJson,itemDel):
+def __delValueItem(currJson,itemDel):
     if findJson(currJson):
 
         deleted= False
@@ -231,7 +246,7 @@ def delValueItem(currJson,itemDel):
 
 
 # *------------------ DELETE ITEM by list name-------------------------------(Object in an Array)
-def delListItem(currJson, itemDel):
+def __delListItem(currJson, itemDel):
     if findJson(currJson):
         with open(currJson, 'r') as data_file:
             data = json.load(data_file)
@@ -258,11 +273,11 @@ def findItem(currJson, itemList: str = None, itemValue: str = None, itemDict: di
         currJson = currJson+'.json'  # TODO apli
     if findJson(currJson):
         if itemDict: 
-            return findDictItem(currJson, itemDict)
+            return __findDictItem(currJson, itemDict)
         if itemValue:
-            return findValueItem(currJson, itemValue)
+            return __findValueItem(currJson, itemValue)
         if itemList:
-            return findListItem(currJson, itemList)
+            return __findListItem(currJson, itemList)
         return False
     else:
         print('json not foud')
@@ -270,7 +285,7 @@ def findItem(currJson, itemList: str = None, itemValue: str = None, itemDict: di
 
 
 # *------------------ FIND ITEM by value------------------------------ -
-def findValueItem(currJson, item):  
+def __findValueItem(currJson, item):  
 
     print('find list by value')
     numItems = 0
@@ -281,6 +296,7 @@ def findValueItem(currJson, item):
             for element in data:
                 for i in range(len(data[element])):
                     values = data[element][i]
+                    print('--------------------------values', values)
                     for value in values.values():
                         if value == item:
                             numItems = numItems + 1
@@ -300,7 +316,7 @@ def findValueItem(currJson, item):
 
 
 # *------------------ FIND ITEM by list name-------------------------------
-def findListItem(currJson, item):
+def __findListItem(currJson, item):
     numItems = 0
     if findJson(currJson):
         with open(currJson, 'r') as data_file:
@@ -325,7 +341,7 @@ def findListItem(currJson, item):
 
 
 # *------------------ FIND ITEM by dict-----------------------------
-def findDictItem(currJson, item):
+def __findDictItem(currJson, item):
     numItems = 0
     if findJson(currJson):
         with open(currJson, 'r') as data_file:
