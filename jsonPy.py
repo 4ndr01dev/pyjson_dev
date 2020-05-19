@@ -144,7 +144,9 @@ def delField(currJson, field):
 
 # *------------------ ADD ITEM-------------------------------(Object in an Array)
 
-def addItem(currJson, dic, item: dict, nameObject: bool = None, name: str = 'DefaultName'):
+def addItem(currJson, dic, item: dict, name:str = None):
+    if name != None:
+        nameObject = True
     idFound = False
     if '.json' in currJson:
         print('lets find it')  # TODO apli
@@ -160,7 +162,11 @@ def addItem(currJson, dic, item: dict, nameObject: bool = None, name: str = 'Def
     item['ID']= id 
     if findJson(currJson):
         if nameObject:
-            return __addItemNamed(currJson, dic, item, nameObject, name)
+            if findItem(currJson, itemList=name):
+                print('this list allredy exists')
+                return False
+            else:
+                return __addItemNamed(currJson, dic, item, name)
         else:
             print('add item')
             f = open(currJson)
@@ -179,7 +185,7 @@ def addItem(currJson, dic, item: dict, nameObject: bool = None, name: str = 'Def
 
 
 # *------------------ ADD ITEM with Name list-------------------------------(Object in an Array)
-def __addItemNamed(currJson, dic, item: dict, nameObject: bool = None, name: str = 'DefaultName'):
+def __addItemNamed(currJson, dic, item: dict, name: str = 'DefaultName'):
     if '.json' in currJson: print('lets find it')  # TODO apli
     else:
         currJson = currJson+'.json'  # TODO apli
@@ -316,7 +322,7 @@ def __findValueItem(currJson, item):
 
 
 # *------------------ FIND ITEM by list name-------------------------------
-def __findListItem(currJson, item):
+def __findListItem(currJson: str, item):
     numItems = 0
     if findJson(currJson):
         with open(currJson, 'r') as data_file:
@@ -341,7 +347,7 @@ def __findListItem(currJson, item):
 
 
 # *------------------ FIND ITEM by dict-----------------------------
-def __findDictItem(currJson, item):
+def __findDictItem(currJson:str, item):
     numItems = 0
     if findJson(currJson):
         with open(currJson, 'r') as data_file:
@@ -361,5 +367,4 @@ def __findDictItem(currJson, item):
         return False
 
 os.chdir('data')
-
 
