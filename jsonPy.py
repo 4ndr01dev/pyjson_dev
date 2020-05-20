@@ -1,6 +1,22 @@
-# *               @ANDROIDEV
+# *               0ANDROIDEV
 # *                 2020
 # * _____________________________________________________________
+'''                                                  
+                                #                   
+                               ###                  
+                              #####                 
+                             #######                
+                            ###### ##               
+                           ###### ####              
+                          ##### #######             
+                         ####     ######            
+                        ####        #####           
+                       ###           #####          
+                      ###              ####         
+                     ##                  ###        
+                    #                      ##       
+                   #                         #      
+'''
 import json  # librery
 import os
 import string
@@ -11,11 +27,14 @@ import random
 
 
 def generateId(stringLength=8):
-    lettersAndDigits = string.ascii_letters + string.digits
+    lettersAndDigits = string#ascii_letters + string#digits
     return ''.join((random.choice(lettersAndDigits) for i in range(stringLength)))
 # *------------------ CREATE A NEW JSON-------------------------------
 
 def addNewJson(name): 
+    """Add a new Json file in the current directiry
+    
+    """
     if os.path.splitext(name) != '.json':
         name = name + '.json'
 
@@ -41,6 +60,9 @@ def addNewJson(name):
     return True
 # *------------------ JSON IS EMPTY-------------------------------
 def isEmptyJson(currJson):
+    """Find if the json is empty
+
+    """
     numItems = 0
     if findJson(currJson):
         with open(currJson, 'r') as data_file:
@@ -52,6 +74,9 @@ def isEmptyJson(currJson):
 
 # *------------------ DEL A JSON-------------------------------
 def delJson(name):
+    """Delete a Json in a current directory
+
+    """
     if findJson(name):
         os.remove(name)
     else:
@@ -60,6 +85,9 @@ def delJson(name):
 
 # *------------------ FIND A JSON-------------------------------
 def findJson(name):
+    """Find a Json file in a current directory
+
+    """
     print(name)
     path = os.getcwd()
     dir_list= os.listdir(path)
@@ -74,15 +102,19 @@ def findJson(name):
 
 # *------------------ WRITE JSON -------------------------------
 def writeJson(currJson, data):
+    """Write the data in the current Json File
 
+    """
     with open(currJson, 'w') as jsonFileOut:
         json.dump(data, jsonFileOut, indent=4)
-
 
 # ? _______________________________________________________________________________
 
 # *------------------ ADD FIELD-------------------------------(Array of object)
 def addField(currJson, newField): 
+    """Add a new field in the current Json file
+
+    """
     if '.json' in currJson:
         print('lets find it')  # TODO apli
     else:
@@ -100,6 +132,9 @@ def addField(currJson, newField):
 
 # *------------------ FIND FIELD-------------------------------(Array of object)
 def findField(currJson, field):
+    """find a field in the current Json file
+
+    """
     if '.json' in currJson:print('lets find it')# TODO apli
     else:
         currJson = currJson+'.json'  # TODO apli
@@ -123,6 +158,9 @@ def findField(currJson, field):
 
 # *------------------ DELETE FIELD-------------------------------(Array of object)
 def delField(currJson, field):  
+    """delete a field in the current Json file
+
+    """
     if os.path.splitext(currJson) != '.json':
         currJson = currJson + '.json'
     if findJson(currJson):
@@ -144,7 +182,25 @@ def delField(currJson, field):
 
 # *------------------ ADD ITEM-------------------------------(Object in an Array)
 
-def addItem(currJson, dic, item: dict, name:str = None):
+def addItem(currJson, dic='default', item: dict= None, name:str = None):
+    """Add a new item  to a determinate dictionary
+    ---------------------------------------------------
+
+    REQUIRED currJson--> current Json File. 
+
+    dic='default' -> Dic name to add it. DEFAULT VALUE = 'default'
+
+    REQUIRED item: dict= None --> The item to add, it must be a dictionary.
+
+    name:str = None --> The name that you want to asing to your item
+
+        ---------------------------------------------------
+    RETURN:
+        TRUE -> correctly added
+
+        FALSE -> it have an issue
+
+    """
     if name != None:
         nameObject = True
     idFound = False
@@ -209,6 +265,32 @@ def __addItemNamed(currJson, dic, item: dict, name: str = 'DefaultName'):
 
 # *------------------ DELETE ITEM-------------------------------(Object in an Array)
 def delItem(currJson, itemListDel: str = None, itemValueDel: str = None, itemDict: dict = None):
+    """Delete a item  to a determinate dictionary
+    ---------------------------------------------------
+
+        REQUIRED currJson--> current Json File.
+
+        dic='default' -> Dic name to add it. DEFAULT VALUE = 'default'
+
+    REQUIRED  some of this options:
+    
+        itemListDel: str = None --> delete a item by name of the list that contains
+        a particular dictionary
+        
+        itemValueDel: str = None --> delete a item that contains
+        a particular value in it .
+        
+        itemDict: dict = None --> delete the itemDict if it´s in the Field.
+
+
+        ---------------------------------------------------
+    RETURN:
+
+        TRUE -> correctly deleted
+
+        FALSE -> it have an issue
+
+    """
     if '.json' in currJson:
         print('lets find it')  # TODO apli
     else:
@@ -273,6 +355,29 @@ def __delListItem(currJson, itemDel):
 
 # *------------------ FIND ITEM-------------------------------
 def findItem(currJson, itemList: str = None, itemValue: str = None, itemDict: dict = None):
+    """Find a item  to a determinate Json
+    ---------------------------------------------------
+
+        REQUIRED currJson--> current Json File.
+
+    REQUIRED  some of this options:
+    
+        itemListDel: str = None --> find a item by name of the list that contains
+        a particular dictionary
+        
+        itemValueDel: str = None --> find a item that contains
+        a particular value in it .
+        
+        itemDict: dict = None --> find the itemDict if it´s in the Field.
+
+        ---------------------------------------------------
+    RETURN:
+
+        TRUE -> correctly deleted
+
+        FALSE -> it have an issue
+
+    """
     if '.json' in currJson:
         print('lets find it')  # TODO apli
     else:
@@ -367,4 +472,5 @@ def __findDictItem(currJson:str, item):
         return False
 
 os.chdir('data')
+
 
