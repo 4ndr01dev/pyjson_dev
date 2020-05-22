@@ -26,9 +26,11 @@ import random
 # * _____________________________________________________________
 
 
-def generateId(stringLength=8):
-    lettersAndDigits = string#ascii_letters + string#digits
-    return ''.join((random.choice(lettersAndDigits) for i in range(stringLength)))
+def generateId():
+    return''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+
+
+
 # *------------------ CREATE A NEW JSON-------------------------------
 
 def addNewJson(name): 
@@ -44,8 +46,7 @@ def addNewJson(name):
     else:
         try:
             # Create target Directory
-            os.mkdir('data')
-            print("Directory ", 'data',  " Created ")
+            print("Directory data must to be created")
 
 
         except FileExistsError:
@@ -201,6 +202,7 @@ def addItem(currJson, dic='default', item: dict= None, name:str = None):
         FALSE -> it have an issue
 
     """
+    nameObject= False
     if name != None:
         nameObject = True
     idFound = False
@@ -208,7 +210,7 @@ def addItem(currJson, dic='default', item: dict= None, name:str = None):
         print('lets find it')  # TODO apli
     else:
         currJson = currJson+'.json'  # TODO apli
-    id = 'seF5YaNw'
+    id = generateId()
     while idFound == False:
         if findItem(currJson,dic,itemValue= id) :
             print('there is a value with that id')
@@ -471,6 +473,33 @@ def __findDictItem(currJson:str, item):
         print('json not foud')
         return False
 
-os.chdir('data')
 
+def editItem(currJson: str,dic:str='default', item:dict={}):
+    if '.json' in currJson:
+        print('lets find it')  # TODO apli
+    else:
+        currJson = currJson+'.json'  # TODO apli
+    print(currJson)
+    if findJson(currJson):
+        if findItem(currJson, itemValue= item['ID']):
+            if delItem(currJson, itemValueDel=item['ID']):
+                print('Item with ', item['ID'] , ' was deleted')
+            else:
+                print('error')
+                return False
+            if addItem(currJson,dic,item):
+                print('Item with ', item['ID'], ' was remplaced')
+                return True
+            else:
+                print('error')
+                return False
+    else:
+        print('json not foud')
+        return False
+
+if 'data' in os.listdir(os.getcwd()):
+    os.chdir('data')
+else:
+    os.mkdir('data')
+    os.chdir('data')
 
