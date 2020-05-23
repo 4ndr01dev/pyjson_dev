@@ -72,6 +72,13 @@ def isEmptyJson(currJson):
             if len(data) == 0 :True
             else: False
 
+# *------------------ JSON GET DATA-------------------------------
+def getData(currJson):
+    if findJson(currJson):
+        with open(currJson, 'r') as data_file:
+            data = json.load(data_file)
+            return data
+    else: return None
 
 # *------------------ DEL A JSON-------------------------------
 def delJson(name):
@@ -87,7 +94,6 @@ def delJson(name):
 # *------------------ FIND A JSON-------------------------------
 def findJson(name):
     """Find a Json file in a current directory
-
     """
     print(name)
     path = os.getcwd()
@@ -104,7 +110,13 @@ def findJson(name):
 # *------------------ WRITE JSON -------------------------------
 def writeJson(currJson, data):
     """Write the data in the current Json File
+        ---------------------------------------------------
 
+    REQUIRED currJson--> current Json File. 
+
+    REQUIRED data -> Data to add
+
+        ---------------------------------------------------
     """
     with open(currJson, 'w') as jsonFileOut:
         json.dump(data, jsonFileOut, indent=4)
@@ -112,8 +124,21 @@ def writeJson(currJson, data):
 # ? _______________________________________________________________________________
 
 # *------------------ ADD FIELD-------------------------------(Array of object)
-def addField(currJson, newField): 
-    """Add a new field in the current Json file
+
+
+def addField(currJson: str, newField: str):
+    """Add a dictionary
+    ---------------------------------------------------
+
+    REQUIRED currJson--> current Json File. 
+
+    REQUIRED newFile:str -> Dic name to add it. DEFAULT VALUE = 'default'
+
+        ---------------------------------------------------
+    RETURN:
+        TRUE -> correctly added
+
+        FALSE -> it have an issue
 
     """
     if '.json' in currJson:
@@ -132,8 +157,19 @@ def addField(currJson, newField):
 
 
 # *------------------ FIND FIELD-------------------------------(Array of object)
-def findField(currJson, field):
-    """find a field in the current Json file
+def findField(currJson:str, field:str):
+    """find a dictionary
+    ---------------------------------------------------
+
+    REQUIRED currJson--> current Json File. 
+
+    REQUIRED file:str -> Dic name to add it. DEFAULT VALUE = 'default'
+
+        ---------------------------------------------------
+    RETURN:
+        TRUE -> found
+
+        FALSE -> not found
 
     """
     if '.json' in currJson:print('lets find it')# TODO apli
@@ -159,7 +195,18 @@ def findField(currJson, field):
 
 # *------------------ DELETE FIELD-------------------------------(Array of object)
 def delField(currJson, field):  
-    """delete a field in the current Json file
+    """delete a dictionary
+    ---------------------------------------------------
+
+    REQUIRED currJson--> current Json File. 
+
+    REQUIRED file:str -> Dic name to add it. DEFAULT VALUE = 'default'
+
+        ---------------------------------------------------
+    RETURN:
+        TRUE -> deleted
+
+        FALSE -> not deleted
 
     """
     if os.path.splitext(currJson) != '.json':
@@ -189,7 +236,7 @@ def addItem(currJson, dic='default', item: dict= None, name:str = None):
 
     REQUIRED currJson--> current Json File. 
 
-    dic='default' -> Dic name to add it. DEFAULT VALUE = 'default'
+    dic='default' -> Dic name to add item in it. DEFAULT VALUE = 'default'
 
     REQUIRED item: dict= None --> The item to add, it must be a dictionary.
 
@@ -473,7 +520,7 @@ def __findDictItem(currJson:str, item):
         print('json not foud')
         return False
 
-
+# *------------------ EDIT ITEM-------------------------------
 def editItem(currJson: str,dic:str='default', item:dict={}):
     if '.json' in currJson:
         print('lets find it')  # TODO apli
@@ -502,4 +549,11 @@ if 'data' in os.listdir(os.getcwd()):
 else:
     os.mkdir('data')
     os.chdir('data')
+currDict = 'dic'
+currJson = 'words.json'
+data = getData(currJson)
+for field in data:
 
+    print(field)
+    for item in data[field]:
+        print(item)
