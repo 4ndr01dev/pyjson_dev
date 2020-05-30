@@ -32,25 +32,25 @@ def generateId():
 
 # ?                  CREATE A NEW JSON
 
-def addNewJson(name): 
+def addNewJson(jsonFile): 
     """Add a new Json file in the current directiry 
     """
-    if os.path.splitext(name) != '.json':
-        name = name + '.json'
+    if os.path.splitext(jsonFile) != '.json':
+        jsonFile = jsonFile + '.json'
 
-    if findJson(name):
+    if findJson(jsonFile):
         return False
     else:
         try:
             print("Directory data must to be created")
         except FileExistsError:
             return False
-    with open(name, 'w'):
+    with open(jsonFile, 'w'):
         pass
     data={
 
     }
-    writeJson(name,data)
+    writeJson(jsonFile,data)
     return True
 
 # ?                  JSON IS EMPTY
@@ -79,12 +79,12 @@ def getData(currJson: str):
 
 # ?                  DEL A JSON
 
-def delJson(name):
+def delJson(jsonFile:str):
     """Delete a Json in a current directory
 
     """
-    if findJson(name):
-        os.remove(name)
+    if findJson(jsonFile):
+        os.remove(jsonFile)
         return True
     else:
         return False
@@ -92,12 +92,12 @@ def delJson(name):
 
 # ?                  FIND A JSON
 
-def findJson(name):
+def findJson(jsonFile:str):
     """Find a Json file in a current directory
     """
     path = os.getcwd()
     dir_list= os.listdir(path)
-    if name in dir_list:
+    if jsonFile in dir_list:
         return True
     else:
             return False
@@ -106,7 +106,7 @@ def findJson(name):
 
 # ?                  WRITE JSON 
 
-def writeJson(currJson: str, data):
+def writeJson(currJson: str, data:dict):
     """Write the data in the current Json File
         --------------------
 
@@ -130,7 +130,7 @@ def addField(currJson: str, newField: str):
 
     REQUIRED currJson--> current Json File. 
 
-    REQUIRED newFile:str -> Dic name to add it. DEFAULT VALUE = 'default'
+    REQUIRED newFile:str -> Dic jsonFile to add it. DEFAULT VALUE = 'default'
 
         --------------------
     RETURN:
@@ -193,7 +193,7 @@ def findField(currJson:str, field:str):
 
 # ?                  DELETE FIELD(Array of object)
 
-def delField(currJson: str, field):
+def delField(currJson: str, field:str):
     """delete a dictionary
     --------------------
 
@@ -306,7 +306,7 @@ def __addItemNamed(currJson: str, dic, item: dict, name: str = 'DefaultName'):
 # ?                  DELETE ITEM(Object in an Array)
 
 def delItem(currJson: str, itemListDel: str = None, itemValueDel: str = None, itemDict: dict = None):
-    """Delete a item  to a determinate dictionary
+    """Delete a item  to determinate dictionary
     --------------------
 
         REQUIRED currJson--> current Json File.
@@ -338,7 +338,7 @@ def delItem(currJson: str, itemListDel: str = None, itemValueDel: str = None, it
         currJson = currJson+'.json'  
     if findJson(currJson):
         if itemDict:
-            print('del by dict')  # !<-----
+            print('del by dict')  
         if itemValueDel:
             return __delValueItem(currJson, itemValueDel)
         if itemListDel:
