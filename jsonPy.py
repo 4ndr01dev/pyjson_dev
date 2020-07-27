@@ -24,6 +24,15 @@ import random
 
 # ?                    FUNCTIONS
 
+def generateIdAuto(json):
+    totalItems=0
+    if(isEmptyJson(json)):
+        return totalItems
+    else:
+        data= getData(json)
+        for field in data:
+            totalItems = totalItems + len(data[field])
+        return totalItems
 
 def generateId():
     return''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
@@ -35,9 +44,10 @@ def generateId():
 def addNewJson(jsonFile): 
     """Add a new Json file in the current directiry 
     """
-    if os.path.splitext(jsonFile) != '.json':
-        jsonFile = jsonFile + '.json'
-
+    if '.json' in jsonFile:
+        print('Adding ...')
+    else:
+        jsonFile = jsonFile+'.json'
     if findJson(jsonFile):
         return False
     else:
@@ -64,8 +74,11 @@ def isEmptyJson(currJson: str):
     if findJson(currJson):
         with open(currJson, 'r') as data_file:
             data = json.load(data_file)
-            if len(data) == 0 :True
-            else: False
+            if len(data) == 0 : return True
+            else: return False
+    else:
+        print('no existe el archivo', currJson)
+        return False 
 
 # ?                  JSON GET DATA
 
@@ -228,7 +241,7 @@ def delField(currJson: str, field:str):
 
 
 def addItem(currJson: str, dic='default', item: dict = None, name: str = None):
-    """Add a new item  to a determinate dictionary
+    """Add a new item  to a determinate dictionary EASY 
     --------------------
 
     REQUIRED currJson--> current Json File. 
@@ -253,11 +266,16 @@ def addItem(currJson: str, dic='default', item: dict = None, name: str = None):
     if '.json' in currJson:
         print('finding...')  
     else:
-        currJson = currJson+'.json'  
-    id = generateId()
+        currJson = currJson+'.json'
+    if(findJson(currJson)):
+        print('We found the json, lets start')
+    else:
+        if(addNewJson(currJson)):
+            print('We just create the json, lets start')
+    id = generateIdAuto(currJson)
     while idFound == False:
         if findItem(currJson,dic,itemValue= id) :
-            id = generateId()
+            id = generateIdAuto(currJson)
         else: 
             idFound = True
     item['ID']= id 
@@ -268,15 +286,17 @@ def addItem(currJson: str, dic='default', item: dict = None, name: str = None):
             else:
                 return __addItemNamed(currJson, dic, item, name)
         else:
+
+            if findField(currJson, dic):
+                print('the field already exist')
+            else:
+                print('adding new field')
+                addField(currJson,dic)
             f = open(currJson)
             data = json.load(f)
-            if findField(currJson, dic):
-                data[dic].append(item)
-                writeJson(currJson, data)
-                return True
-            else:
-                print('no existe la libreria, debe crearla')
-                return False
+            data[dic].append(item)
+            writeJson(currJson, data)
+            return True
     else:
         return False
 
@@ -527,4 +547,14 @@ if 'data' in os.listdir(os.getcwd()):
 else:
     os.mkdir('data')
     os.chdir('data')
+
+item = {'word': 'pepinillo'}
+
+currDict = 'dic'
+currJson = 'words'
+if addItem(currJson, currDict, item):
+    print(item, ' agregado')
+else:
+    print(item.values(), ' no agregado')
+
 
